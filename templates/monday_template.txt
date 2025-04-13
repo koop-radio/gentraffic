@@ -1,10 +1,10 @@
 09:00:00,     ,9 AM LEGAL ID    MONDAY
-        ,20003,                                   ,L,SIGN ON HD - Michael Brown
+        ,20001,                                   ,L,Sign On 2024 Kyle
         ,TRFFC
 10:00:00,     ,10 AM LEGAL ID
         ,99937,                                   ,L,KOOP HD1 HD3 Hornsby 3 M
         ,TRFFC
-11:00:00,     ,11 PM LEGAL ID
+11:00:00,     ,11 AM LEGAL ID
         ,99938,                                   ,L,KOOP HD1 HD3 Hornsby 3 F
         ,TRFFC
 12:00:00,     ,12 PM LEGAL ID
@@ -13,6 +13,9 @@
 13:00:00,     ,1 PM LEGAL ID
         ,99936,                                   ,L,KOOP HD1 HD3 Hornsby 2 F
         ,TRFFC
+13:30:00,     ,1:30 PM
+	,01018,                                   ,L,Writing on the Air
+        ,TRFFC,                                   ,L
 14:00:00,     ,2 PM  LEGAL ID
         ,99935,                                   ,L,KOOP HD1 HD3 Hornsby 2 M
         ,TRFFC
@@ -26,17 +29,20 @@
         ,99939,                                   ,L,KOOP HD1 HD3 Hornsby 4 M
         ,TRFFC
 18:00:00,     ,6 PM LEGAL ID
-18:00:00,     ,LOAD NEXT CUT AT 18:00 EXACTLY!!
-        ,99934,                                   ,A,KOOP HD1 HD3 Hornsby 1 F
+	,99937,                                   ,L,KOOP HD1 HD3 Hornsby 3M
+	,TRFFC
+18:30:00,     ,6:30 PM
+	,TRFFC
+18:58:20,     ,LOAD NEXT CUT AT 6:58PM EXACTLY!!
+18:58:00,20002,                                   ,A,Sign Off 2024 Dale
+19:00:00,     ,7:00 PM
         ,TRFFC,                                   ,A
-18:04:00,71350,                                   ,A
+19:04:00,71350,                                   ,A
         ,TRFFC,                                   ,A
-18:32:00,71360,                                   ,A
-18:58:20,20004,                                   ,A,SIGN OFF - Stephen
-19:00:00,     ,7PM LEGAL ID
-        ,99943,                                   ,L,KVRX HD3 Austin 1 M
+19:32:00,71360,                                   ,A
+20:00:00,     ,08:00 PM LEGAL ID
+        ,99944,                                   ,L,KVRX HD3 Austin 2 F
         ,TRFFC
-20:00:00,     ,8PM LEGAL ID
-        ,99943,                                   ,L,KVRX HD3 Austin 1 M
+20:30:00,     ,08:30 PM
         ,TRFFC
-21:00:00,     ,Local Music Mix
+21:00:00,     ,09:00 PM Local Music Mix

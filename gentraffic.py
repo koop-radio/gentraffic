@@ -3,6 +3,7 @@ logger  = True
 import sys
 import csv
 import shutil
+import datetime
 import random
 import difflib
 import copy
@@ -21,17 +22,8 @@ from os.path import exists
 from xfile import xfile
 from update_dad import update_dad
 from verify_results import verify_results
-
-startday = "MONDAY"
-
-if len(argv) > 1:
-    startday = argv[1].upper()
-
-if "MON" not in startday.upper() and startday.upper() not in "MONDAY":
-    print("\n\nWarning--date check overriddden!\n",
-    "\t(date checking is bypassed whenever startday is not Monday)\n\n")
-
-print("\nStarting on",startday)
+from google_tools.update_traffic_log import update_traffic_log
+from google_tools.send_results import send_results
 
 on_prod = False
 
@@ -69,23 +61,57 @@ def gen_auto(playout, day):
     #print(gentraffic_ascii)
     return None
 
+def create_shwprms(cut_records):
+    shwprms = []
+    for cut_record in cut_records:   
+        cut_id = cut_int(cut_record['CUT'])
+        userdef = cut_record['USERDEF']
+        group = cut_record['GROUP']
+        length = cut_record['LENGTH']
+        if group == 'SHWPRM' and length:
+            prm_record = copy.deepcopy(cut_record)
+            shwprms.append(cut_record)
+    if(verbose):
+        print("Creating random song list...")
+    random.shuffle(shwprms)
+    shwprms = shwprms + shwprms
+    mylog(shwprms, 'shwprms.log')
+    return shwprms
+
+def create_promos_list(cut_records):
+    from collections import defaultdict
+    import itertools
+
+    promos_list = []
+    for cut_record in cut_records:
+        userdef_parts = cut_record['USERDEF'].split('_slots')
+        if len(userdef_parts) == 2:
+            promo_cut = copy.deepcopy(cut_record)
+            promo_cut['FUNCTION'] = 'A'
+            promo_cut['TYPE'] = 'P'
+            promos_list.append(promo_cut)
+
+    return promos_list
+
 def create_song_list(cut_records):
     songs = []
     legal_ids = []
     for cut_record in cut_records:   
         cut_id = cut_int(cut_record['CUT'])
         userdef = cut_record['USERDEF']
+        group = cut_record['GROUP']
         if userdef == 'Local' or userdef == 'Local Artist' or userdef == 'local':
             song_record = copy.deepcopy(cut_record)
             song_record['FUNCTION'] = 'A'
             song_record['TYPE'] = 'P'
             songs.append(song_record)
-        if cut_id > 99942 and cut_id < 99953:
+        if cut_id > 99942 and cut_id < 99953 and cut_record['LENGTH'] :
             song_record = copy.deepcopy(cut_record)
             song_record['FUNCTION'] = 'A'
             song_record['TYPE'] = 'P'
             legal_ids.append(song_record)
-    mylog(cut_records, 'cut_records.log')
+    #mylog(cut_records, 'cut_records.log')
+    mylog_json(cut_records, 'cut_records.json')
     mylog(songs, 'songs.log')
     mylog(legal_ids, 'legal_ids.log')
     if(verbose):
@@ -107,7 +133,8 @@ def create_song_list(cut_records):
         some_random_legal_ids.append(legal_ids[i])
     mylog(some_random_legal_ids, 'some_random_legal_ids.log')
     #print("random song depth is ",len(some_random_songs))
-    return (some_random_songs, some_random_legal_ids)
+    overnight_promos = create_promos_list(cut_records)
+    return (some_random_songs, some_random_legal_ids, overnight_promos)
 
 def convert_traffic_old(traffic_data): #todo--add cut field to traffic here so we only have to go through cut_records once
     day_lookup = {'Monday': 4, 'Tuesday' : 6, 'Wednesday' : 8, 'Thursday' : 10, 'Friday' : 12, 'Saturday' : 14, 'Sunday' : 16} 
@@ -157,11 +184,29 @@ def convert_traffic(traffic_data): #todo--add cut field to traffic here so we on
                                       and 'SOBD FM' not in title):
                 daily_traffic.append({'TIME':time,'TITLE':title})
         traffic[day] = daily_traffic
-        daily_traffic_summary = [x for x in daily_traffic if x['TITLE'] ]
-        daily_traffic_ascii = [x['TIME']+'---> '+x['TITLE'] if x['TIME'] else '              '+x['TITLE'] for x in daily_traffic_summary]
+        daily_traffic_ascii = [x['TIME']+'---> '+x['TITLE'] if x['TIME'] else '              '+x['TITLE'] for x in daily_traffic]
         mylog(daily_traffic_ascii,day+"_traffic.log")
     mylog(traffic, 'traffic.log')
     return traffic
+
+
+#  replace titles matching 'SHWPRM' with a randomly selected cut 
+#  in the SHWPRM randomly shuffled list.   All that's added here 
+#  is the title, and the remaining fields are added in xref_traffic_titles.
+#  at this point, traffic_records consist of only title and time fields.
+def add_shwprms_to_traffic_records(traffic_records, shwprms):
+    start_num_shwprms = len(shwprms)/2
+    num_scheduled = 0
+    for day in traffic_records:   #produce a dictionary with requested titles as a key 
+        for row in traffic_records[day]:
+            title = dd(row,'TITLE')
+            if ('SHWPRM' in title or 'SHPRM' in title):
+                shwprm = shwprms.pop()
+                num_scheduled += 1
+                row['TITLE'] = dd(shwprm,'TITLE')
+
+    print("\nscheduled ",num_scheduled," of ",start_num_shwprms," show promotions\n")
+    return None
 
 
 #lookup the 'CUT" number from cut records that most closely
@@ -178,7 +223,8 @@ def xref_traffic_titles(traffic_records, cut_records):
         for row in traffic_records[day]:
             title = munge_traffic_title(dd(row,'TITLE'))
             if (title != '' and title not in unique_titles.keys() 
-                            and title != 'sign on'):
+                            and title != 'sign on' 
+                            and title != 'SHWPRM'):
                 #print("xref looking for:",title)
                 match_index = get_close_matches_indexes(title, cut_titles, cutoff=0.5)
                 #print("match_index is:",match_index)
@@ -187,10 +233,12 @@ def xref_traffic_titles(traffic_records, cut_records):
                 xref_log_data.append("requested: " + title.ljust(32)[:32] + "\n" +
                                      "    found: " + cut_titles[mi].ljust(32)[:32] + 
                                      "-->" + str(match_index) )
-                if match_index[0][2] < .85:
+                #match_threshold = .97
+                match_threshold = 1 
+                if match_index[0][2] < match_threshold:
                     if verbose:
                         print("\n  !!!!!!!!!!!!!!!WARNING!!!!!!!!!!!!!!!!!")
-                        print("      ----- Match Score below .85 -----\n")
+                        print("      ----- Match Score below ", match_threshold, " -----\n")
                         print(" traffic title requested:  ",title)
                         print(" closest cut title found:  ",cut_titles[mi])
                         print("\n match index:\n")
@@ -344,7 +392,9 @@ def get_start_stop_times(playlist):
     return (start_time, stop_time)
      
 def create_list_of_ordered_cuts(start_time, end_time, cut_list):
-    (some_random_songs,some_random_legal_ids) = cut_list
+    (some_random_songs,some_random_legal_ids, promos_list) = cut_list
+    if promos_list:
+        some_random_songs.insert(-2,promos_list[0])
     hour_threshold = 3541
     new_cuts = []
     overflow = []
@@ -363,11 +413,13 @@ def create_list_of_ordered_cuts(start_time, end_time, cut_list):
                 some_random_songs.extend(overflow)
                 overflow = []
                 offending_cut = new_cuts.pop()
+                #print("offending cut is ",offending_cut['TITLE'])
                 some_random_songs.insert(0,offending_cut)
                 seconds -= float(offending_cut['LENGTH'])
             next_song = copy.deepcopy(some_random_songs.pop())
+            #print("popping next song from list ",next_song['TITLE'])
             length = float(next_song['LENGTH'])
-            #print("seconds is", format(seconds,".2f"),
+           #print("seconds is", format(seconds,".2f"),
             #        "length is", format(length,".2f"),
             #        "sum is ", format(seconds + length,".2f"),
             #        "current hour is", hour,
@@ -375,20 +427,34 @@ def create_list_of_ordered_cuts(start_time, end_time, cut_list):
             #        "in_current_hour is", in_current_hour)
             if  seconds + length < hour_threshold: 
                 seconds += length
-                new_cuts.append(next_song); #print("appending song:",next_song)
-                #print("<thresh seconds is", format(seconds,".2f"))
+                new_cuts.append(next_song); #print("appending song:",next_song['TITLE'])
+                #print("newcut+=",next_song['TITLE'])
+               #print("<thresh seconds is", format(seconds,".2f"))
             elif seconds + length > 3600:
-                overflow.append(next_song); #print("overflow appending:",next_song['CUT'])
-                #print(">3600   seconds is", format(seconds,".2f"))
+                overflow.append(next_song); #print("overflow appending:",next_song['TITLE'])
+               #print(">3600   seconds is", format(seconds,".2f"))
             elif seconds + length > hour_threshold:
-                #print(">thresh seconds is", format(seconds,".2f"))
+               #print(">thresh seconds is", format(seconds,".2f"))
                 seconds += length
-                new_cuts.append(next_song); #print("appending song:",next_song)
+                new_cuts.append(next_song); #print("appending song:",next_song['TITLE'])
                 if hour != end_hour - 1:
                     random_legal_id = copy.deepcopy(some_random_legal_ids.pop())
                     new_cuts.append(random_legal_id); #print("appending legal id:",random_legal_id)
-                    #print("appending legal id branchy",hour,make_time_str(seconds),seconds,random_legal_id)
-                    seconds += float(random_legal_id['LENGTH'])
+                    newlength = random_legal_id['LENGTH'] #print("appending legal id branchy",hour,make_time_str(seconds),seconds,random_legal_id)
+                    seconds += float(random_legal_id['LENGTH']) #print("seconds/length/newlenth",seconds,length,newlength)
+
+                    if promos_list:
+                        #add one more song to space legal id from promos
+                        spacing_song = copy.deepcopy(some_random_songs.pop())
+                        new_cuts.append(spacing_song);
+                        seconds += float(spacing_song['LENGTH']) #print("seconds/length/newlenth",seconds,length,newlength)
+
+                        #add one promo
+                        next_promo = copy.deepcopy(promos_list.pop(0))
+                        promos_list.append(next_promo)
+                        new_cuts.append(next_promo); #print("appending legal id:",random_legal_id)
+                        seconds += float(next_promo['LENGTH']) #print("seconds/length/newlenth",seconds,length,newlength)
+ 
                 #print(">thresh second2 is", format(seconds,".2f"))
                 seconds -= 3600
                 #print(">thresh second3 is", format(seconds,".2f"))
@@ -400,10 +466,24 @@ def create_list_of_ordered_cuts(start_time, end_time, cut_list):
     new_cuts.insert(0,copy.deepcopy( some_random_legal_ids.pop() ) )
     return new_cuts
 
+def calculate_total_overnight_seconds(start_live_time, end_live_time):
+    end_of_day_in_seconds = get_seconds("24:00:00")
+    end_live_time_in_seconds = get_seconds(end_live_time)
+    start_live_time_in_seconds = get_seconds(start_live_time)
+    evening_seconds = end_of_day_in_seconds - end_live_time_in_seconds
+    morning_seconds = start_live_time_in_seconds #start_of_day is 00:00:00 
+    total_seconds = evening_seconds + morning_seconds
+    return total_seconds
+
+run_count = 0
 def add_overnight_cuts(playlist, cut_list):
+    global run_count
     if verbose:
         print("adding overnight cuts")
     (start_live_time, end_live_time) = get_start_stop_times(playlist)
+    total_overnight_seconds = calculate_total_overnight_seconds(start_live_time, end_live_time)
+    run_count = run_count + 1
+    mylog(cut_list[0],"songs_and_promos_"+str(run_count)+".log")
     add_prefix(playlist,start_live_time)
     morning_music = create_list_of_ordered_cuts('00:00:00',start_live_time, cut_list)
     evening_music = create_list_of_ordered_cuts(end_live_time,'24:00:00', cut_list)
@@ -485,6 +565,8 @@ def gen_playout_log(playout, day):
 
 def gen_1_day_of_traffic(playlist, day, traffic, cut_records):
     overnight_cuts = create_song_list(cut_records)
+    mylog(overnight_cuts[0],day+"_songslog")
+    mylog(overnight_cuts[2],day+"_promos.log")
     mylog(playlist,day+"_playlist_b4_traffic.log")
     add_traffic_to_playlist(playlist, traffic)
     mylog(playlist,day+"_trafficted_playlist.log")
@@ -495,9 +577,9 @@ def gen_1_day_of_traffic(playlist, day, traffic, cut_records):
     gen_auto(playlist, day)
     return None
 
-def gentraffic():
-    print("\ngentraffic v1.02b\n")
-    print("  last updated on: 3/21/23")
+def gentraffic(startday):
+    print("\ngentraffic v1.1b\n")
+    print("  last updated on: 6/17/23")
     print("  last updated by: Markanth\n\n")
     print("generating traffic...\n")
     if verbose:
@@ -515,23 +597,42 @@ def gentraffic():
     mylog(ascii_traffic,"ascii_traffic.log")
     traffic = convert_traffic(ascii_traffic)
     mylog(traffic,"traffic_conversion.log")
+    shwprms = create_shwprms(cut_records) 
+    mylog(shwprms,"shwprms.log")
+    add_shwprms_to_traffic_records(traffic, shwprms)
+    mylog(traffic,"traffic_with_shwprms.log")
     xref_traffic_titles(traffic, cut_records)
     mylog(traffic,"traffic_x_ref.log")
+    mylog_json(traffic,"traffic_x_ref.json")
     #use this line to generate the full week of playout
     list(map(gen_1_day_of_traffic, playlists, weekdays()
             ,traffic.values(), repeat(cut_records)))
     #use this line to generate just one specific day of playout
     #list(map(gen_1_day_of_traffic, [playlists[2]], ['Wednesday'] 
     #        ,repeat(traffic['Wednesday']), repeat(cut_records)))
-    print("\nGentraffic Finished!!!!-Traffic Successfully Generated for",startday,"to Sunday!\n\n")
+    print("\nGentraffic Finished!!!!-Traffic Successfully Generated for",startday,"to SUNDAY!\n\n")
     return True
 
-if gentraffic():
-    xfile()
-    print("updating DAD with startday",startday)
-    update_dad(startday)
-    verify_results()
-    print("\nAll Programs Finished!!\n")
+
+if __name__ == '__main__':
+    startday = "MONDAY"
+    if len(argv) > 1:
+        startday = argv[1].upper()
+    if "MON" not in startday.upper() and startday.upper() not in "MONDAY":
+        print("\n\nWarning--date check overriddden!\n",
+        "\t(date checking is bypassed whenever startday is not Monday)\n\n")
+    print("\nStarting on",startday)
+
+    if gentraffic(startday):
+        xfile()
+        print("updating DAD with startday",startday)
+        update_dad(startday)
+        
+        current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+        shutil.make_archive(f'../gt_{current_datetime}', 'zip', '..', 'gentraffic')
+        if on_prod:
+            send_results()
+        print("\nAll Programs Finished!!\n")
     
 #zipfile.ZipFile('
 

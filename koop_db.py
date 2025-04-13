@@ -7,6 +7,7 @@ import random
 import difflib
 import copy
 import dbf
+import json
 
 from itertools import repeat
 from difflib import SequenceMatcher
@@ -133,6 +134,10 @@ def mylog(iterable, fname):
             if verbose:
                 print(i)
         return f.close()
+
+def mylog_json(iterable, fname):
+    with open('logs/' + fname.lower(), 'w') as f:
+        json.dump(iterable, f, indent=4)
 
 def list2file(alist, fname):
     f = open(fname, "w")
@@ -524,10 +529,7 @@ def convert_lists_to_dicts(list_of_lists,fields=[]):
 def munge_traffic_title(title_string):
     rstring = title_string.lower().strip()
     #rstring = sub('prm roots train','roots train promo',rstring)
-    rstring = sub('prm the gazing ball 5.22','prm gazing ball 5.22',rstring)
     rstring = sub('hammell on trial','hamell on trial',rstring)
-    rstring = sub('roses and thorns','roses & thorns',rstring)
-    rstring = sub('prm international folk','prm intl. folk',rstring)
     rstring = sub('/',' ',rstring)
     rstring = sub('a curious','curious',rstring)
     rstring = sub('ua clown dog.*','ua clown dog',rstring)

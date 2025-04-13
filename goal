@@ -1,0 +1,4 @@
+clean
+shopt -s expand_aliases
+source /c/z/personal/.bashrc.aliases
+pw auto_gentraffic.py $1

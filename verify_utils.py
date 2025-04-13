@@ -4,8 +4,7 @@ import sys
 import shutil
 
 def getdates(ascii_traffic):
-    return [''.join( (x.split('/')[0].zfill(2) , x.split('/')[1].zfill(2)) ) for x in ascii_traffic[2][2:]]
-
+    return [''.join((x.split('/')[0].zfill(2), x.split('/')[1].zfill(2))) for x in ascii_traffic[2][2:] if x]
              
 #verify all plays in the traffic log are played in the autofile
 def test_playlist(traffic, playlist):
@@ -54,7 +53,7 @@ def get_playlist(date, cut_records, on_prod):
         cut = get_cut(cutid,cut_records)
         if record['FUNCTION'] == 'L' and record['CUT'][0:2] != '99' and cut:
             playlist.append( cut['TITLE'] )
-            if (float(cut['LENGTH']) > 232 and 
+            if (float(cut['LENGTH']) > 200 and 
                     cut['CUT'] != '12260'  and
                     cut['CUT'] != '00605'):
                 print("ERROR!!!!!!!!!!!!! Long cut:",

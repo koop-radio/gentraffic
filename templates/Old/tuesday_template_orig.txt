@@ -1,0 +1,68 @@
+09:00:00,     ,09:00 AM LEGAL ID
+        ,20001,                                   ,L,SIGN ON HD - Ted Branson
+        ,TRFFC
+09:30:00,     ,09:30 AM
+	,TRFFC
+10:00:00,     ,10:00 AM LEGAL ID
+        ,99935,                                   ,L,KOOP HD1 HD3 Hornsby 2 M
+        ,TRFFC
+10:30:00,     ,10:30 AM
+	,TRFFC,
+11:00:00,     ,11:00 AM LEGAL ID
+        ,99936,                                   ,L,KOOP HD1 HD3 Hornsby 2 F
+        ,TRFFC
+11:30:00,     ,11:30 AM
+	,TRFFC
+12:00:00,     ,12:00 PM LEGAL ID
+        ,99934,                                   ,L,KOOP HD1 HD3 Hornsby 1 F
+        ,TRFFC
+12:30:00,     ,12:30 PM
+	,TRFFC
+13:00:00,     ,01:00 PM LEGAL ID
+        ,99938,                                   ,L,KOOP HD1 HD3 Hornsby 3 F
+        ,TRFFC
+13:30:00,     ,01:30 PM
+	,TRFFC
+14:00:00,     ,02:00 PM LEGAL ID
+        ,99939,                                   ,A,KOOP HD1 HD3 Hornsby
+        ,71001,                                   ,A,DN seg 1
+        ,TRFFC,                                   ,A
+14:20:00,     
+        ,71002,                                   ,A,DN seg 2
+        ,TRFFC,                                   ,A
+14:40:00,     
+        ,71003,                                   ,A,DN seg 3
+15:00:00,     ,03:00 PM LEGAL ID
+        ,99935,                                   ,L,KOOP HD1 HD3 Hornsby 2 M
+	,TRFFC
+15:30:00,     ,03:30 PM
+	,TRFFC
+16:00:00,     ,04:00 PM LEGAL ID
+        ,99936,                                   ,L,KOOP HD1 HD3 Hornsby 2 F
+        ,TRFFC
+16:30:00,     ,04:30 PM
+	,TRFFC
+17:00:00,     ,05:00 PM LEGAL ID
+        ,99938,                                   ,L,KOOP HD1 HD3 Hornsby 3 F
+        ,TRFFC
+17:30:00,     ,05:30 PM
+	,TRFFC
+18:00:00,     ,06:00 PM LEGAL ID
+        ,99937,                                   ,L,KOOP HD1 HD3 Hornsby 3 M
+        ,TRFFC
+18:30:00,     ,06:30 PM
+	,TRFFC
+18:58:20,     ,LOAD SIGNOFF AT EXACTLY 6:58:20!!
+18:58:20,20004,                                   ,L,SIGN OFF - Stephen
+        ,99943,                                   ,L,KVRX HD3 Austin 1 M
+        ,TRFFC
+19:00:00,     ,07:00 PM 
+	,TRFFC
+19:30:00,     ,07:30 PM
+        ,TRFFC
+20:00:00,     ,08:00 PM LEGAL ID
+        ,99943,                                   ,L,KVRX HD3 Austin 1 M
+        ,TRFFC
+20:30:00,     ,08:30 PM
+	,TRFFC
+21:00:00,     ,09:00 PM Local Music Mix
