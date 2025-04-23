@@ -4,7 +4,7 @@ from datetime import datetime
 
 def update_traffic_log():
     print("entering update_traffic_log")
-    get_most_recent_file()  # This downloads the latest traffic.csv file
+    return get_most_recent_file()  # This downloads the latest traffic.csv file
     #with open('traffic.csv', mode='r') as file:
         #csv_reader = csv.reader(file)
         #for row in csv_reader:
@@ -15,7 +15,7 @@ def update_traffic_log():
         #            return True
         #        else:
         #            return False
-    return True  # In case the file doesn't match expected format
+    # GROK return True  # In case the file doesn't match expected format
 
 if __name__ == '__main__':
     print(update_traffic_log())

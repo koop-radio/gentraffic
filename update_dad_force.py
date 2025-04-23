@@ -21,7 +21,7 @@ if __name__ == "__main__":
 
 def update_dad(startday):
     on_prod = False
-    if exists('K:/DAD/Files/CUTS.DBF'):
+    if exists('/mnt/DAD/DAD/Files/CUTS.DBF'):
         on_prod = True
 
     ascii_traffic = read_traffic()
@@ -68,7 +68,7 @@ def update_dad(startday):
         day_file = "outputfiles/"+day+".DBF"
         shutil.copy(day_file,auto_file)
         if on_prod:
-            shutil.copy(auto_file,"K:/DAD/Files/PLAYLIST")
+            shutil.copy(auto_file,"/mnt/DAD/DAD/PLAYLIST")
         shutil.copy(auto_file, "logs")
         print("Updated",auto_file)
     print("\nFinished")

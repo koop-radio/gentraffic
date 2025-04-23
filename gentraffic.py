@@ -27,7 +27,7 @@ from google_tools.send_results import send_results
 
 on_prod = False
 
-if exists('K:/DAD/Files/CUTS.DBF'):
+if exists('/mnt/DAD/DAD/Files/CUTS.DBF'):
     on_prod = True
 
 def gen_auto(playout, day):
@@ -559,7 +559,7 @@ def gen_playout_log(playout, day):
     mylog(asci, filename)
     shutil.copy('logs/'+filename, 'outputfiles/'+day.upper()[:8]+'.LOG')
     if on_prod:
-        shutil.copy('logs/'+filename, 'K:/DAD/Import/'+day.upper()[:8]+'.LOG')
+        shutil.copy('logs/'+filename, '/mnt/DAD/DAD/Import/'+day.upper()[:8]+'.LOG')
     #print("\n\n\n\nAnd here is the lovely output:\n")
     #print(gentraffic_ascii)
 
@@ -585,7 +585,7 @@ def gentraffic(startday):
     if verbose:
         print("active working directory is",os.getcwd())
     if on_prod:
-        cut_records = get_records_from_dbf('K:/DAD/Files/CUTS.DBF',ignore_archived=True)
+        cut_records = get_records_from_dbf('/mnt/DAD/DAD/Files/CUTS.DBF',ignore_archived=True)
     else:
         cut_records = get_records_from_dbf('./inputfiles/cuts.dbf',ignore_archived=True)
 

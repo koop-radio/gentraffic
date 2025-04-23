@@ -9,12 +9,12 @@ import shutil
 
 def verify_results():
     on_prod = False
-    if exists('K:/DAD/Files/CUTS.DBF'):
+    if exists('/mnt/DAD/DAD/Files/CUTS.DBF'):
         on_prod = True
     
     if on_prod:
-        cut_records = get_records_from_dbf('K:/DAD/Files/CUTS.DBF')
-        shutil.copy('K:/DAD/Files/CUTS.DBF','inputfiles/cuts.dbf')
+        cut_records = get_records_from_dbf('/mnt/DAD/DAD/Files/CUTS.DBF')
+        shutil.copy('/mnt/DAD/DAD/Files/CUTS.DBF','inputfiles/cuts.dbf')
     else:
         cut_records = get_records_from_dbf('inputfiles/cuts.dbf')
     
@@ -49,7 +49,7 @@ def verify_results():
         list2file(playlist,playlist_file)
         list2file(traffic,traffic_file)
         test_playlist(traffic, playlist)
-        call(['C:/program_files/vim/vim90/gvim', '-d',traffic_file,playlist_file])
+        call(['vi', '-d',traffic_file,playlist_file])
     shutil.make_archive('../gt'+dates[0], 'zip', '..','gentraffic')
     return True
 

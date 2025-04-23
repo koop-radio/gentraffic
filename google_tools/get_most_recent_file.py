@@ -60,10 +60,19 @@ def get_most_recent_file():
         most_recent_file = files[0]
         print(f"Most recently modified file containing 'Traffic Log' within the last 5 weeks: {most_recent_file['name']}")
         print(f"File ID: {most_recent_file['id']}")
-        print(f"Modified Time: {most_recent_file['modifiedTime']}")
-        download_file(service, most_recent_file['id'], 'traffic.csv', most_recent_file['mimeType'])
+        print(f"last time: {datetime.fromtimestamp(os.path.getmtime('./inputfiles/traffic.csv'))}")
+        last_time = datetime.fromtimestamp(os.path.getmtime('./inputfiles/traffic.csv'))
+        recent_time = datetime.strptime(most_recent_file['modifiedTime'], '%Y-%m-%dT%H:%M:%S.%fZ')
+        interval = last_time - recent_time
+        print(f"Interval = {interval.total_seconds()}")
+        if interval.total_seconds() > 0:
+            print(f"Nothing to do, no file changes!")
+        else:
+            return download_file(service, most_recent_file['id'], 'traffic.csv', most_recent_file['mimeType'])
     else:
         print("No files containing 'Traffic Log' modified within the last 5 weeks found.")
+        
+    return False
 
 if __name__ == '__main__':
     get_most_recent_file()

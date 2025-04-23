@@ -31,7 +31,7 @@ def get_weeklytraffic(ascii_traffic, dates):
 
 def get_playlist(date, cut_records, on_prod):
     if on_prod:
-        dbf_file = 'K:/DAD/Files/PLAYLIST/'+date+'AUTO.DBF'
+        dbf_file = '/mnt/DAD/DAD/Files/LAYLIST/'+date+'AUTO.DBF'
     else:
         dbf_file = 'autofiles/' + date + 'AUTO.DBF'
     try: records = get_records_from_dbf(dbf_file)    

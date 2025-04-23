@@ -14,7 +14,7 @@ def log_autos():
     
     #import the AUTO files and verify traffic
     for date in dates:
-        dbf_file = 'K:/DAD/Files/PLAYLIST/'+date+'AUTO.DBF'
+        dbf_file = '/mnt/DAD/DAD/PLAYLIST/'+date+'AUTO.DBF'
 
         records = get_records_from_dbf(dbf_file)
 

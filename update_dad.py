@@ -21,7 +21,8 @@ if __name__ == "__main__":
 
 def update_dad(startday):
     on_prod = False
-    if exists('K:/DAD/Files/CUTS.DBF'):
+    if exists('/mnt/DAD/DAD/Files/CUTS.DBF'):
+        print("\n on production!!!")
         on_prod = True
 
     ascii_traffic = read_traffic()
@@ -58,7 +59,8 @@ def update_dad(startday):
         
     started = False
 
-
+    # GROK while testing don't update DAD
+    on_prod = False
     for date in dates:
         day = week.pop(0)
         if day in startday.upper() or startday.upper() in day:
@@ -69,10 +71,10 @@ def update_dad(startday):
         day_file = "outputfiles/"+day+".DBF"
         shutil.copy(day_file,auto_file)
         if on_prod:
-            shutil.copy(auto_file,"K:/DAD/Files/PLAYLIST")
+            shutil.copy(auto_file,"/mnt/DAD/DAD/Files/PLAYLIST")
         shutil.copy(auto_file, "logs")
         print("Updated",auto_file)
-    print("\nUpdateDad Finished! Traffic successfully copied to K: Drive.\n")
+    print("\nUpdateDad Finished! Traffic successfully copied to mapped Drive.\n")
 
 if __name__ == "__main__":
     update_dad(startday)

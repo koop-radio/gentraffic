@@ -501,7 +501,7 @@ def reorder_dict(adict, alist):
 
 def read_traffic(clip_top=False):
     traffic_data = []
-    with open('inputfiles/traffic.csv') as csvfile:
+    with open('./inputfiles/traffic.csv') as csvfile:
         traffic_csv = csv.reader(csvfile)
         for row in traffic_csv:
             traffic_data.append(row)
@@ -576,9 +576,9 @@ def test_koop_db():
     shutil.rmtree('logs')
     os.mkdir('logs')
     summarize_koop_files('./input_files')
-    if exists('K:/DAD/Files/CUTS.DBF'):
+    if exists('/mnt/DAD/DAD/Files/CUTS.DBF'):
         on_prod = True
-        cut_records = get_records_from_dbf('K:/DAD/Files/cuts.dbf')
+        cut_records = get_records_from_dbf('/mnt/DAD/DAD/Files/CUTS.DBF')
     else:
         on_prod = False
         cut_records = get_records_from_dbf('./input_files/cuts.dbf')

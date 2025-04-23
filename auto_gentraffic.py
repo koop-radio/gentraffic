@@ -51,24 +51,24 @@ def auto_gentraffic():
         if startday:
             #if os.path.isfile(dst):
                 #os.remove(dst)
-            shutil.move("c:/z/python/koop/gentraffic/traffic.csv", "c:/z/python/koop/gentraffic/inputfiles/traffic.csv",copy_function=shutil.copy)
+            shutil.move("./traffic.csv", "./inputfiles/traffic.csv",copy_function=shutil.copy)
             if gentraffic(startday):
                 print("Finished gentraffic phase")
                 xfile()
                 print("Updating DAD with startday", startday)
                 update_dad(startday)
-                send_results()
+                # GROK send_results()
                 extract_lengths_and_send_gmail()
                 print("\nAll Programs Finished!!\n")
                 current_datetime = datetime.now().strftime("%Y%m%d_%H%M%S")
-                shutil.make_archive(f'../gt_{current_datetime}', 'zip', '..', 'gentraffic')
+                # GROK shutil.make_archive(f'../gt_{current_datetime}', 'zip', '..', 'gentraffic')
                 return True
     return False
 
 if __name__ == '__main__':
     print("In main")
     on_prod = False
-    if exists('K:/DAD/Files/CUTS.DBF'):
+    if exists('/mnt/DAD/DAD/Files/CUTS.DBF'):
         on_prod = True
     print("calling auto_gentraffic directly")
     if not auto_gentraffic():
