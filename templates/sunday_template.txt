@@ -15,6 +15,7 @@
         ,TRFFC
 12:00:00,     ,12 PM
         ,99937,                                   ,L,KOOP HD1 HD3 Hornsby 3 M
+        ,11951,                                   ,L,Roots Train intro
         ,TRFFC
 12:30:00,     ,12:30 PM
         ,TRFFC
@@ -25,7 +26,7 @@
         ,TRFFC
 14:00:00,     ,2 PM
         ,99939,                                   ,L,KOOP HD1 HD3 Hornsby 4 M
-	,12260, 				  ,L,HHH Theme Extended
+        ,12263,                                   ,L,Pure Energy intro
         ,TRFFC
 14:30:00,     ,2:30 PM
         ,TRFFC

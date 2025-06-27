@@ -20,6 +20,10 @@ from os.path import exists
 
 verbose = False
 logger = True
+if exists('/mnt/DAD/DAD/Files/CUTS.DBF'):
+   prefix='/home/debian/gentraffic/'
+else:
+   prefix='./'
 
 def enumerated_product(*args):
     yield from zip(product(*(range(len(x)) for x in args)), product(*args))
@@ -296,7 +300,7 @@ def get_records_from_dbf(filename,ignore_archived=False):
        Output: a list of dictionaries containing the 
                data in the dbf database """
        
-    #print("getting records from",filename,"\n")
+    print("getting records from",filename,"\n")
     dbftable = DBF(filename,char_decode_errors='ignore')
     #print(dbftable)
     records = []
@@ -430,7 +434,7 @@ def find_koop_files(path):
     return koop_files
 
 def find_template_files(path):
-    all_files = glob.glob(path+"/*_template.txt")
+    all_files = glob.glob(path+"*_template.txt")
     template_files = []
     for file in all_files:
         template_files.append(file)
@@ -476,7 +480,7 @@ def read_csvfile(filename):
     return csv_as_lists
 
 def read_templates():
-    template_files = find_template_files('./templates')
+    template_files = find_template_files(prefix+'templates/')
     templates = {}
     for filename in template_files:
         stripped = sub('^.*/','',filename)
@@ -501,7 +505,7 @@ def reorder_dict(adict, alist):
 
 def read_traffic(clip_top=False):
     traffic_data = []
-    with open('./inputfiles/traffic.csv') as csvfile:
+    with open(prefix+'inputfiles/traffic.csv') as csvfile:
         traffic_csv = csv.reader(csvfile)
         for row in traffic_csv:
             traffic_data.append(row)
@@ -579,10 +583,12 @@ def test_koop_db():
     if exists('/mnt/DAD/DAD/Files/CUTS.DBF'):
         on_prod = True
         cut_records = get_records_from_dbf('/mnt/DAD/DAD/Files/CUTS.DBF')
+        prefix='/home/debian/gentraffic/'
     else:
         on_prod = False
         cut_records = get_records_from_dbf('./input_files/cuts.dbf')
-    create_templates('./input_files',cut_records,True)
+        prefix=''
+    create_templates(prefix+'input_files',cut_records,True)
     #note there was a hand modification done here for the first
     #creation.  from now on, modification is only done for show changes
     #we could also make a show calendar to template generation automation if

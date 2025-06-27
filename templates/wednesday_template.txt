@@ -29,7 +29,6 @@
 	,TRFFC
 15:00:00,     ,03:00 PM LEGAL ID
         ,99938,                                   ,A,KOOP HD1 HD3 Hornsby 3 F
-        ,70006,                                   ,A,This Way Out
         ,TRFFC,                                   ,L
 15:30:00,     ,03:30 PM 
         ,TRFFC
@@ -61,9 +60,4 @@
         ,TRFFC
 20:30:00,     ,08:30 PM
         ,TRFFC
-21:00:00,     ,09:00 PM LEGAL ID
-        ,99944,                                   ,L,KVRX HD3 Austin 2 F
-        ,TRFFC
-21:30:00,     ,09:30 PM
-        ,TRFFC
-22:00:00,     ,10:00 PM Local Music Mix
+21:00:00,     ,09:00 PM Local Music Mix

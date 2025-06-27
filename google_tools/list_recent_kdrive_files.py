@@ -2,7 +2,7 @@ import os
 import datetime
 
 def list_recent_kdrive_files(num_files=10):
-    directory = "k:/DAD/Files/PLAYLIST"
+    directory = "/mnt/DAD/DAD/Files/PLAYLIST"
     # Get a list of files in the directory
     try:
         files = os.listdir(directory)

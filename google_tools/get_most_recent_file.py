@@ -3,6 +3,7 @@ import pickle
 import os.path
 import os
 import io
+from os.path import exists
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
@@ -11,8 +12,13 @@ from datetime import datetime, timedelta
 
 # If modifying these scopes, delete the file token.pickle.
 SCOPES = ['https://www.googleapis.com/auth/drive.readonly']
+if exists('/mnt/DAD/DAD/Files/CUTS.DBF'):
+    prefix='/home/debian/gentraffic/'
+else:
+	prefix='./'
 
 def download_file(service, file_id, file_name, mime_type):
+    os.chdir(prefix)
     if 'application/vnd.google-apps' in mime_type:
         request = service.files().export_media(fileId=file_id, mimeType='text/csv')
     else:
@@ -27,23 +33,25 @@ def download_file(service, file_id, file_name, mime_type):
         status, done = downloader.next_chunk()
         print(f"Download progress: {int(status.progress() * 100)}%")
     print(f"File {file_name} downloaded.")
+    return True
 
 def get_most_recent_file():
     creds = None
     # The file token.pickle stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first time.
-    if os.path.exists('token.pickle'):
-        with open('token.pickle', 'rb') as token:
+    if os.path.exists(prefix+'token.pickle'):
+        with open(prefix+'token.pickle', 'rb') as token:
             creds = pickle.load(token)
     # If there are no (valid) credentials available, let the user log in.
     if not creds or not creds.valid:
+        print("BAD CREDS")
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
-            flow = InstalledAppFlow.from_client_secrets_file('credentials.json', SCOPES)
-            creds = flow.run_local_server(port=0)
+            flow = InstalledAppFlow.from_client_secrets_file(prefix+'credentials.json', SCOPES)
+            creds = flow.run_local_server(poerrt=0)
         # Save the credentials for the next run
-        with open('token.pickle', 'wb') as token:
+        with open(prefix+'token.pickle', 'wb') as token:
             pickle.dump(creds, token)
 
     service = build('drive', 'v3', credentials=creds)
@@ -60,13 +68,15 @@ def get_most_recent_file():
         most_recent_file = files[0]
         print(f"Most recently modified file containing 'Traffic Log' within the last 5 weeks: {most_recent_file['name']}")
         print(f"File ID: {most_recent_file['id']}")
-        print(f"last time: {datetime.fromtimestamp(os.path.getmtime('./inputfiles/traffic.csv'))}")
-        last_time = datetime.fromtimestamp(os.path.getmtime('./inputfiles/traffic.csv'))
+        print(f"last time: {datetime.fromtimestamp(os.path.getmtime(prefix+'inputfiles/traffic.csv'))}")
+        last_time = datetime.fromtimestamp(os.path.getmtime(prefix+'inputfiles/traffic.csv'))
         recent_time = datetime.strptime(most_recent_file['modifiedTime'], '%Y-%m-%dT%H:%M:%S.%fZ')
+        print(f"recet time: {recent_time}")
         interval = last_time - recent_time
         print(f"Interval = {interval.total_seconds()}")
         if interval.total_seconds() > 0:
             print(f"Nothing to do, no file changes!")
+            return False
         else:
             return download_file(service, most_recent_file['id'], 'traffic.csv', most_recent_file['mimeType'])
     else:

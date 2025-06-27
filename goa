@@ -1,2 +1,2 @@
-clean
-/c/Users/MM/AppData/Local/Programs/Python/Python310/python auto_gentraffic.py $1
+cd /home/dale/gentraffic
+python3 auto_gentraffic.py $1

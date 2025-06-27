@@ -5,6 +5,11 @@ from os.path import exists
 from sys import argv
 import shutil
 
+if exists('/mnt/DAD/DAD/Files/CUTS.DBF'):
+    prefix='/home/debian/gentraffic/'
+else:
+	prefix='./'
+
 if __name__ == "__main__":
 
     startday = "MONDAY"
@@ -59,16 +64,14 @@ def update_dad(startday):
         
     started = False
 
-    # GROK while testing don't update DAD
-    on_prod = False
     for date in dates:
         day = week.pop(0)
         if day in startday.upper() or startday.upper() in day:
             started = True
         if not started:
             continue
-        auto_file = "outputfiles/"+date+"AUTO.DBF"
-        day_file = "outputfiles/"+day+".DBF"
+        auto_file = prefix+"outputfiles/"+date+"AUTO.DBF"
+        day_file = prefix+"outputfiles/"+day+".DBF"
         shutil.copy(day_file,auto_file)
         if on_prod:
             shutil.copy(auto_file,"/mnt/DAD/DAD/Files/PLAYLIST")

@@ -29,6 +29,10 @@ on_prod = False
 
 if exists('/mnt/DAD/DAD/Files/CUTS.DBF'):
     on_prod = True
+    prefix='/home/debian/gentraffic/'
+else:
+	prefix='./'
+
 
 def gen_auto(playout, day):
     filename = "outputfiles/" + day.upper()[:8] + ".DBF"
@@ -557,7 +561,7 @@ def gen_playout_log(playout, day):
     if verbose:
         print("generating",filename)
     mylog(asci, filename)
-    shutil.copy('logs/'+filename, 'outputfiles/'+day.upper()[:8]+'.LOG')
+    shutil.copy(prefix+'logs/'+filename, prefix+'outputfiles/'+day.upper()[:8]+'.LOG')
     if on_prod:
         shutil.copy('logs/'+filename, '/mnt/DAD/DAD/Import/'+day.upper()[:8]+'.LOG')
     #print("\n\n\n\nAnd here is the lovely output:\n")
@@ -578,9 +582,9 @@ def gen_1_day_of_traffic(playlist, day, traffic, cut_records):
     return None
 
 def gentraffic(startday):
-    print("\ngentraffic v1.1b\n")
-    print("  last updated on: 6/17/23")
-    print("  last updated by: Markanth\n\n")
+    print("\ngentraffic v2.0a\n")
+    print("  last updated on: 4/29/25")
+    print("  last updated by: Dale Smith\n\n")
     print("generating traffic...\n")
     if verbose:
         print("active working directory is",os.getcwd())
@@ -634,5 +638,3 @@ if __name__ == '__main__':
             send_results()
         print("\nAll Programs Finished!!\n")
     
-#zipfile.ZipFile('
-

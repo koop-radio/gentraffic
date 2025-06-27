@@ -18,4 +18,4 @@ def update_traffic_log():
     # GROK return True  # In case the file doesn't match expected format
 
 if __name__ == '__main__':
-    print(update_traffic_log())
+    update_traffic_log()
