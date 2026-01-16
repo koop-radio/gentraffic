@@ -1,4 +1,0 @@
-clean
-shopt -s expand_aliases
-source /c/z/personal/.bashrc.aliases
-pw gentraffic.py

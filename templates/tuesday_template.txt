@@ -36,9 +36,9 @@
         ,71003,                                   ,A,DN seg 3
 15:00:00,     ,03:00 PM LEGAL ID
         ,99935,                                   ,L,KOOP HD1 HD3 Hornsby 2 M
-	,TRFFC                                        
+	,TRFFC
 15:30:00,     ,03:30 PM
-	,TRFFC                                        
+	,TRFFC
 16:00:00,     ,04:00 PM LEGAL ID
         ,99936,                                   ,L,KOOP HD1 HD3 Hornsby 2 F
         ,TRFFC
@@ -59,12 +59,7 @@
         ,99943,                                   ,L,KVRX HD3 Austin 1 M
         ,TRFFC
 19:00:00,     ,07:00 PM 
-	,TRFFC
+	   ,TRFFC
 19:30:00,     ,07:30 PM
         ,TRFFC
-20:00:00,     ,08:00 PM LEGAL ID
-        ,99943,                                   ,L,KVRX HD3 Austin 1 M
-        ,TRFFC
-20:30:00,     ,08:30 PM
-	,TRFFC
-21:00:00,     ,09:00 PM Local Music Mix
+20:00:00,     ,08:00 PM Local Music Mix

@@ -111,7 +111,7 @@ def extract_lengths_and_send_gmail():
     lengths_and_sums_str = print_lengths_and_sums(day_lengths)
     email_body = f"Here are the total traffic times and sums between {start_time} and {end_time}:\n"
     email_body += lengths_and_sums_str
-    sendgmail("traffic times from prodmmauto", email_body, "playout@koop.org, leafkeeperken@gmail.com, kenz@koop.org, dean@koop.org, jerell@koop.org")
+    sendgmail("traffic times from prodmmauto", email_body, "playout@koop.org")
 
 if __name__ == "__main__":
     extract_lengths_and_send_gmail()

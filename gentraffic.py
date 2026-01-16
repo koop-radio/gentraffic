@@ -47,7 +47,7 @@ def gen_auto(playout, day):
     #print("auto_fields is",new_auto_fields)
     new_playout = prune_records(playout, new_auto_fields)
     for row in new_playout:
-        #print("row is:",row)
+        #print("comment is:",row['COMMENT'])
         new_auto_table.append(row)
     new_auto_table.close()
     auto_table.close()

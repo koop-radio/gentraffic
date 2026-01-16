@@ -44,12 +44,11 @@ def get_most_recent_file():
             creds = pickle.load(token)
     # If there are no (valid) credentials available, let the user log in.
     if not creds or not creds.valid:
-        print("BAD CREDS")
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
             flow = InstalledAppFlow.from_client_secrets_file(prefix+'credentials.json', SCOPES)
-            creds = flow.run_local_server(poerrt=0)
+            creds = flow.run_local_server(port=0)
         # Save the credentials for the next run
         with open(prefix+'token.pickle', 'wb') as token:
             pickle.dump(creds, token)
@@ -58,20 +57,31 @@ def get_most_recent_file():
 
     # Calculate the date 5 weeks ago
     five_weeks_ago = (datetime.utcnow() - timedelta(weeks=5)).strftime("%Y-%m-%dT%H:%M:%SZ")
-
+    print(f" file weeks ago = {five_weeks_ago}")
+    
     # Search for the most recent file containing "Traffic Log" within the last 5 weeks
-    query = f"name contains 'Traffic Log' and modifiedTime > '{five_weeks_ago}'"
-    results = service.files().list(q=query, fields="nextPageToken, files(id, name, modifiedTime, mimeType)", orderBy="modifiedTime desc", supportsAllDrives=True, includeItemsFromAllDrives=True).execute()
+    folder_id ='1dvka2AHeLcgsd_yyue5oM81vt2ePbjP9'
+    query = f"name contains 'Traffic Log' and modifiedTime > '{five_weeks_ago}' and trashed=false"
+    results = service.files().list(q=query, fields="nextPageToken, files(id, name, modifiedTime, mimeType)", orderBy="modifiedTime desc", 
+        supportsAllDrives=True, includeItemsFromAllDrives=True).execute()
     files = results.get('files', [])
 
     if files:
+        # print(f" size of files = ")
+        # print(len(files))
+        # print(f" list of files = ")
+        # print(files)
         most_recent_file = files[0]
         print(f"Most recently modified file containing 'Traffic Log' within the last 5 weeks: {most_recent_file['name']}")
         print(f"File ID: {most_recent_file['id']}")
-        print(f"last time: {datetime.fromtimestamp(os.path.getmtime(prefix+'inputfiles/traffic.csv'))}")
-        last_time = datetime.fromtimestamp(os.path.getmtime(prefix+'inputfiles/traffic.csv'))
         recent_time = datetime.strptime(most_recent_file['modifiedTime'], '%Y-%m-%dT%H:%M:%S.%fZ')
-        print(f"recet time: {recent_time}")
+        if os.path.exists(prefix+'inputfiles/traffic.csv'):
+            last_time = datetime.fromtimestamp(os.path.getmtime(prefix+'inputfiles/traffic.csv'))            
+        else:
+            last_time = recent_time
+            
+        print(f"last time: {last_time}")            
+        print(f"recent time: {recent_time}")
         interval = last_time - recent_time
         print(f"Interval = {interval.total_seconds()}")
         if interval.total_seconds() > 0:

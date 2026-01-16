@@ -75,7 +75,7 @@ def update_dad(startday):
         shutil.copy(day_file,auto_file)
         if on_prod:
             shutil.copy(auto_file,"/mnt/DAD/DAD/Files/PLAYLIST")
-        shutil.copy(auto_file, "logs")
+        
         print("Updated",auto_file)
     print("\nUpdateDad Finished! Traffic successfully copied to mapped Drive.\n")
 

@@ -4,10 +4,15 @@ from google.auth.transport.requests import Request
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from auto_gentraffic import auto_gentraffic
+from os.path import exists
+import shutil
 import os
-
-# Import your sendgmail function from its module
 from google_tools.sendgmail import sendgmail
+
+if exists('/mnt/DAD/DAD/Files/CUTS.DBF'):
+    prefix='/home/debian/gentraffic/'
+else:
+	prefix='./'
 
 def get_gmail_service(token_file_name, scopes):
     creds = None
@@ -46,8 +51,11 @@ def check_email_and_run_auto_gentraffic(service):
             service.users().messages().modify(userId='me', id=message['id'], body={'removeLabelIds': ['UNREAD']}).execute()
 
         # Simulate running auto_gentraffic and send a notification
-        auto_gentraffic() # Uncomment and use your actual function call
-        print("auto_gentraffic executed successfully")
+        shutil.move(prefix+"inputfiles/traffic.csv", prefix+"inputfiles/prev.csv")
+        if auto_gentraffic() :
+            print("auto_gentraffic executed successfully")
+        else:
+            print("auto_gentraffic failed - check /logs/cronourly.log for errors")
 
     except HttpError as error:
         print(f'An error occurred: {error}')

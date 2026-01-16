@@ -9,6 +9,12 @@ from xfile import xfile
 from update_dad import update_dad
 from extract_lengths_and_send_gmail import extract_lengths_and_send_gmail 
 
+on_prod = False
+if exists('/mnt/DAD/DAD/Files/CUTS.DBF'):
+    on_prod = True
+    prefix='/home/debian/gentraffic/'
+else:
+    prefix='./'
 
 def find_start_day(csv_file):
     with open(csv_file, 'r') as file:
@@ -56,8 +62,9 @@ def auto_gentraffic():
                 xfile()
                 print("Updating DAD with startday", startday)
                 update_dad(startday)
-                send_results()
-                extract_lengths_and_send_gmail()
+                if on_prod:
+                    send_results()
+                    # not any more extract_lengths_and_send_gmail()
                 print("\nAll Programs Finished!!\n")
                 current_datetime = datetime.now().strftime("%Y%m%d_%H%M%S")
                 # GROK shutil.make_archive(f'../gt_{current_datetime}', 'zip', '..', 'gentraffic')
@@ -65,13 +72,6 @@ def auto_gentraffic():
     return False
 
 if __name__ == '__main__':
-    print("In main")
-    on_prod = False
-    if exists('/mnt/DAD/DAD/Files/CUTS.DBF'):
-        on_prod = True
-        prefix='/home/debian/gentraffic/'
-    else:
-        prefix='./'
     print("calling auto_gentraffic directly")
     if not auto_gentraffic():
         print("auto_gentraffic finished with nothing to do!!!!")
