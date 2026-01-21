@@ -49,5 +49,5 @@
         ,99944,                                   ,L,KVRX HD3 Austin 2 F
         ,TRFFC
 21:30:00,     ,09:30 PM
-        ,TRFFC        
-22:00:00,     ,09:00 PM Local Music Mix
+        ,TRFFC     
+22:00:00,     ,10:00 PM Local Music Mix

@@ -20,11 +20,10 @@
 	,TRFFC
 13:00:00,     ,01:00 PM LEGAL ID
         ,99938,                                   ,L,KOOP HD1 HD3 Hornsby 3 F
-        ,70006,                                   ,A,This Way Out New
-        ,TRFFC,									  ,A
+        ,TRFFC,
 13:30:00,     ,01:30 PM
-        ,70007,                                   ,A,This Way Out Old
-	    ,TRFFC,                                   ,A
+        ,70006,                                   ,A,This Way Out New
+	,TRFFC,                                   ,A
 14:00:00,     ,02:00 PM LEGAL ID
         ,99939,                                   ,A,KOOP HD1 HD3 Hornsby
         ,71001,                                   ,A,DN seg 1
@@ -58,8 +57,13 @@
 18:58:20,20004,                                   ,L,Sign Off 2024 IZdee
         ,99943,                                   ,L,KVRX HD3 Austin 1 M
         ,TRFFC
-19:00:00,     ,07:00 PM 
-	   ,TRFFC
+19:00:00,     ,07:00 PM
+	,TRFFC
 19:30:00,     ,07:30 PM
         ,TRFFC
-20:00:00,     ,08:00 PM Local Music Mix
+20:00:00,     ,08:00 PM LEGAL ID
+        ,99943,                                   ,L,KVRX HD3 Austin 1 M
+        ,TRFFC
+20:30:00,     ,08:30 PM
+        ,TRFFC
+21:00:00,     ,09:00 PM Local Music Mix
