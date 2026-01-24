@@ -1,0 +1,3 @@
+cd /home/debian/gentraffic
+python3 /home/debian/gentraffic/check_email_and_run_auto_gentraffic.py 
+echo Finished gentraffic_email 
