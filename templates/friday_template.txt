@@ -1,5 +1,5 @@
 09:00:00,     ,09:00 AM LEGAL ID
-        ,20009,                                   ,L,Sign On 2024 St Annie
+        ,20009,                                   ,L,Sign On 2026 Kim
         ,TRFFC
 09:30:00,     ,09:30 AM 
         ,TRFFC
@@ -49,7 +49,7 @@
 18:30:00,     ,06:30 PM 
         ,TRFFC
 18:58:20,     ,LOAD SIGNOFF AT EXACTLY 18:58:20!!
-18:58:20,20010,                                   ,L,Sign Off 2024 Stephanie
+18:58:20,20010,                                   ,L,Sign Off 2026 Kim
 19:00:00,     ,07:00 PM LEGAL ID
         ,99943,                                   ,L,KVRX HD3 Austin 1 M
         ,TRFFC
@@ -65,4 +65,9 @@
         ,TRFFC
 21:30:00,     ,09:30 PM
         ,TRFFC
-22:00:00,     ,10:00 PM Local Music Mix
+22:00:00,     ,10:00 PM LEGAL ID
+        ,99944,                                   ,L,KVRX HD3 Austin 2 F
+        ,TRFFC
+22:30:00,     ,10:30 PM
+        ,TRFFC        
+23:00:00,     ,11:00 PM Local Music Mix

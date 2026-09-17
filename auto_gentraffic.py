@@ -55,6 +55,7 @@ def auto_gentraffic():
     if update_traffic_log():
         print("Passed traffic log test")
         startday = find_start_day(prefix+"traffic.csv")
+        print("start day = ", startday)
         if startday:
             shutil.move(prefix+"traffic.csv", prefix+"inputfiles/traffic.csv",copy_function=shutil.copy)
             if gentraffic(startday):

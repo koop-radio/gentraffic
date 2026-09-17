@@ -1,5 +1,5 @@
 09:00:00,     ,9 AM LEGAL ID    MONDAY
-        ,20001,                                   ,L,Sign On 2024 Kyle
+        ,20001,                                   ,L,Sign On 2026 Lisa
         ,TRFFC
 10:00:00,     ,10 AM LEGAL ID
         ,99937,                                   ,L,KOOP HD1 HD3 Hornsby 3 M
@@ -34,7 +34,7 @@
 18:30:00,     ,6:30 PM
 	,TRFFC
 18:58:20,     ,LOAD NEXT CUT AT 6:58:20 PM EXACTLY
-18:58:20,20002,                                   ,A,Sign Off 2024 Dale
+18:58:20,20002,                                   ,A,Sign Off 2026 Lisa
 19:00:00,     ,7:00 PM
         ,TRFFC,                                   ,A
 19:04:00,71350,                                   ,A
@@ -49,5 +49,5 @@
         ,99944,                                   ,L,KVRX HD3 Austin 2 F
         ,TRFFC
 21:30:00,     ,09:30 PM
-        ,TRFFC     
+        ,TRFFC
 22:00:00,     ,10:00 PM Local Music Mix

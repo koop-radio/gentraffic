@@ -67,10 +67,10 @@ def get_most_recent_file():
     files = results.get('files', [])
 
     if files:
-        # print(f" size of files = ")
-        # print(len(files))
-        # print(f" list of files = ")
-        # print(files)
+        print(f" size of files = ")
+        print(len(files))
+        print(f" list of files = ")
+        print(files)
         most_recent_file = files[0]
         print(f"Most recently modified file containing 'Traffic Log' within the last 5 weeks: {most_recent_file['name']}")
         print(f"File ID: {most_recent_file['id']}")

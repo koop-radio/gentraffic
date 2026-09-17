@@ -1,5 +1,5 @@
 09:00:00,     ,09:00 AM LEGAL ID
-        ,20003,                                   ,L,Sign On 2024 Deidre
+        ,20003,                                   ,L,Sign On 2026 DotMatrix
         ,TRFFC
 09:30:00,     ,09:30 AM
 	,TRFFC
@@ -54,7 +54,7 @@
 18:30:00,     ,06:30 PM
 	,TRFFC
 18:58:20,     ,LOAD SIGNOFF AT EXACTLY 6:58:20!!
-18:58:20,20004,                                   ,L,Sign Off 2024 IZdee
+18:58:20,20004,                                   ,L,Sign Off 2026 Michelle
         ,99943,                                   ,L,KVRX HD3 Austin 1 M
         ,TRFFC
 19:00:00,     ,07:00 PM
@@ -66,4 +66,9 @@
         ,TRFFC
 20:30:00,     ,08:30 PM
         ,TRFFC
-21:00:00,     ,09:00 PM Local Music Mix
+21:00:00,     ,09:00 PM LEGAL ID
+        ,99943,                                   ,L,KVRX HD3 Austin 1 M
+        ,TRFFC
+21:30:00,     ,09:30 PM
+        ,TRFFC
+22:00:00,     ,10:00 PM Local Music Mix

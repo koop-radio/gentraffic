@@ -583,7 +583,7 @@ def gen_1_day_of_traffic(playlist, day, traffic, cut_records):
 
 def gentraffic(startday):
     print("\ngentraffic v2.0a\n")
-    print("  last updated on: 4/29/25")
+    print("  last updated on: 1/26/26")
     print("  last updated by: Dale Smith\n\n")
     print("generating traffic...\n")
     if verbose:
@@ -632,8 +632,8 @@ if __name__ == '__main__':
         print("updating DAD with startday",startday)
         update_dad(startday)
         
-        current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-        shutil.make_archive(f'../gt_{current_datetime}', 'zip', '..', 'gentraffic')
+        # current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+        # shutil.make_archive(f'../gt_{current_datetime}', 'zip', '..', 'gentraffic')
         if on_prod:
             send_results()
         print("\nAll Programs Finished!!\n")
