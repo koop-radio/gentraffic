@@ -490,9 +490,39 @@ def read_templates():
         mylog(templates[day_str],day_str + '_template.log')
     return templates
 
+# Row index of the traffic CSV's day-name header (e.g. ,,MONDAY,TUESDAY,...).
+TRAFFIC_DAY_NAME_ROW = 3
+
 def weekdays():
     return ['Monday', 'Tuesday', 'Wednesday', 'Thursday'
            ,'Friday', 'Saturday', 'Sunday'] 
+
+def traffic_week_order(traffic_rows):
+    """Weekday names in the order of the traffic CSV's seven day columns.
+
+    Read from the CSV's day-name header row, so a week may start on any day
+    (e.g. SUNDAY..SATURDAY or MONDAY..SUNDAY). Falls back to the legacy
+    Monday-first order only when that row is blank.
+    """
+    header = traffic_rows[TRAFFIC_DAY_NAME_ROW] if len(traffic_rows) > TRAFFIC_DAY_NAME_ROW else []
+    week_order = [cell.strip().title() for cell in header[2:9]]
+    if not any(week_order):
+        print("Warning: traffic CSV has no day-name row; assuming a Monday-first week.")
+        return weekdays()
+    if sorted(week_order) != sorted(weekdays()):
+        raise ValueError("traffic CSV day-name row must list each weekday exactly once "
+                         "in columns 3-9, got: %s" % ', '.join(week_order))
+    return week_order
+
+def cli_startday(args):
+    """Start day from the command line, defaulting to the traffic week's first day."""
+    week_start = traffic_week_order(read_traffic())[0].upper()
+    startday = args[1].upper() if len(args) > 1 else week_start
+    if startday[:3] != week_start[:3]:
+        print("\n\nWarning--date check overriddden!\n",
+        "\t(date checking is bypassed whenever startday is not %s)\n\n" % week_start)
+    print("\nStarting on", startday)
+    return startday
 
 def reorder_dict(adict, alist):
     ordered_dict = {}
@@ -558,8 +588,8 @@ def mylower(alist):
 #and now we have a list of templates wherein each template has been
 #converted from list without field names into dictionaries with 
 #the fields defined by a list
-def convert_templates(templates):
-    ordered_templates = reorder_dict(templates,weekdays())
+def convert_templates(templates, week_order):
+    ordered_templates = reorder_dict(templates,week_order)
     new_dicts = list(map(convert_lists_to_dicts,ordered_templates.values()))
     for template_day in new_dicts:
         for line in template_day:
@@ -594,7 +624,7 @@ def test_koop_db():
     #we could also make a show calendar to template generation automation if
     #it would be helpful to the show schedule manager person(s)
     templates = read_templates()
-    templates_with_records = convert_templates(templates)
+    templates_with_records = convert_templates(templates, weekdays())
     print("Running Checksum--The first line of numbers is the expected checksum of the output files.")
     print("                  The following line is what was observed.")
     print("\nIf the following two lines are the same the test passed--if not, it failed.\n")
