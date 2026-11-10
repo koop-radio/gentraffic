@@ -1,4 +1,4 @@
-from koop_db import read_traffic, weekdays
+from koop_db import read_traffic, traffic_week_order, cli_startday
 from verify_utils import getdates
 from datetime import datetime
 from os.path import exists
@@ -9,20 +9,6 @@ if exists('/mnt/DAD/DAD/Files/CUTS.DBF'):
     prefix='/home/debian/gentraffic/'
 else:
 	prefix='./'
-
-if __name__ == "__main__":
-
-    startday = "MONDAY"
-
-    if len(argv) > 1:
-        startday = argv[1].upper()
-
-    if "MON" not in startday.upper() and startday.upper() not in "MONDAY":
-        print("\n\nWarning--date check overriddden!\n",
-        "\t(date checking is bypassed whenever startday is not Monday)\n\n")
-
-    print("\nStarting on",startday)
-
 
 def update_dad(startday):
     on_prod = False
@@ -40,13 +26,8 @@ def update_dad(startday):
 
     dates = getdates(ascii_traffic)
     #print("This week's AUTO files are:",dates,'\n')
-    week = weekdays()
-
-    for i,day in enumerate(week):
-        if day == 'Wednesday':
-            week[i] = 'WEDNESDA'
-        else:
-            week[i] = day.upper()
+    # DAD day-file names (e.g. WEDNESDA), in the CSV's column order
+    week = [day.upper()[:8] for day in traffic_week_order(ascii_traffic)]
 
     # get current datetime
     # there was a bug here where it was always getting gmt time.  can't remember how it was fixed
@@ -58,7 +39,7 @@ def update_dad(startday):
     #print('Month/Day is ', str(dt_now.month).zfill(2)+str(dt_now.day).zfill(2),"\n")
 
 
-    if weekof_dt < dt_now and (startday.upper() in 'MONDAY' or 'MON' in startday.upper()):
+    if weekof_dt < dt_now and startday.upper()[:3] == week[0][:3]:
         print('\nError! ==> Refusing to autocopy into the past.\n')
         return False
         
@@ -80,4 +61,4 @@ def update_dad(startday):
     print("\nUpdateDad Finished! Traffic successfully copied to mapped Drive.\n")
 
 if __name__ == "__main__":
-    update_dad(startday)
+    update_dad(cli_startday(argv))

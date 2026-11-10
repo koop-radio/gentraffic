@@ -169,9 +169,9 @@ def convert_traffic_old(traffic_data): #todo--add cut field to traffic here so w
     return traffic
 
 #converts list of strings to a list of records
-def convert_traffic(traffic_data): #todo--add cut field to traffic here so we only have to go through cut_records once
+def convert_traffic(traffic_data, week_order): #todo--add cut field to traffic here so we only have to go through cut_records once
     traffic = {}
-    for i,day in enumerate(weekdays()):
+    for i,day in enumerate(week_order):
         daily_traffic = []
         for row in traffic_data:
             time = row[1]
@@ -593,13 +593,14 @@ def gentraffic(startday):
     else:
         cut_records = get_records_from_dbf('./inputfiles/cuts.dbf',ignore_archived=True)
 
+    week_order = traffic_week_order(read_traffic())
     templates = read_templates()
-    playlists = convert_templates(templates)
+    playlists = convert_templates(templates, week_order)
     mylog(playlists,'playlists.log')
     mylistlog(playlists,'template_conversion.log')
     ascii_traffic = read_traffic(clip_top=True)
     mylog(ascii_traffic,"ascii_traffic.log")
-    traffic = convert_traffic(ascii_traffic)
+    traffic = convert_traffic(ascii_traffic, week_order)
     mylog(traffic,"traffic_conversion.log")
     shwprms = create_shwprms(cut_records) 
     mylog(shwprms,"shwprms.log")
@@ -609,23 +610,17 @@ def gentraffic(startday):
     mylog(traffic,"traffic_x_ref.log")
     mylog_json(traffic,"traffic_x_ref.json")
     #use this line to generate the full week of playout
-    list(map(gen_1_day_of_traffic, playlists, weekdays()
+    list(map(gen_1_day_of_traffic, playlists, week_order
             ,traffic.values(), repeat(cut_records)))
     #use this line to generate just one specific day of playout
     #list(map(gen_1_day_of_traffic, [playlists[2]], ['Wednesday'] 
     #        ,repeat(traffic['Wednesday']), repeat(cut_records)))
-    print("\nGentraffic Finished!!!!-Traffic Successfully Generated for",startday,"to SUNDAY!\n\n")
+    print("\nGentraffic Finished!!!!-Traffic Successfully Generated for",startday,"to",week_order[-1].upper()+"!\n\n")
     return True
 
 
 if __name__ == '__main__':
-    startday = "MONDAY"
-    if len(argv) > 1:
-        startday = argv[1].upper()
-    if "MON" not in startday.upper() and startday.upper() not in "MONDAY":
-        print("\n\nWarning--date check overriddden!\n",
-        "\t(date checking is bypassed whenever startday is not Monday)\n\n")
-    print("\nStarting on",startday)
+    startday = cli_startday(argv)
 
     if gentraffic(startday):
         xfile()

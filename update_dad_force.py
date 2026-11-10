@@ -1,23 +1,9 @@
-from koop_db import read_traffic, weekdays
+from koop_db import read_traffic, traffic_week_order, cli_startday
 from verify_utils import getdates
 from datetime import datetime
 from os.path import exists
 from sys import argv
 import shutil
-
-if __name__ == "__main__":
-
-    startday = "MONDAY"
-
-    if len(argv) > 1:
-        startday = argv[1].upper()
-
-    if "MON" not in startday.upper() and startday.upper() not in "MONDAY":
-        print("\n\nWarning--date check overriddden!\n",
-        "\t(date checking is bypassed whenever startday is not Monday)\n\n")
-
-    print("\nStarting on",startday)
-
 
 def update_dad(startday):
     on_prod = False
@@ -34,13 +20,8 @@ def update_dad(startday):
 
     dates = getdates(ascii_traffic)
     print("\ndates are:",dates,'\n')
-    week = weekdays()
-
-    for i,day in enumerate(week):
-        if day == 'Wednesday':
-            week[i] = 'WEDNESDA'
-        else:
-            week[i] = day.upper()
+    # DAD day-file names (e.g. WEDNESDA), in the CSV's column order
+    week = [day.upper()[:8] for day in traffic_week_order(ascii_traffic)]
 
     # get current datetime
     dt_now = datetime.now()
@@ -74,4 +55,4 @@ def update_dad(startday):
     print("\nFinished")
 
 if __name__ == "__main__":
-    update_dad(startday)
+    update_dad(cli_startday(argv))

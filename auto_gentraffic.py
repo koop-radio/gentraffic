@@ -3,6 +3,7 @@ import csv
 from datetime import datetime, timedelta
 from os.path import exists
 from gentraffic import gentraffic
+from koop_db import traffic_week_order
 from google_tools.update_traffic_log import update_traffic_log
 from google_tools.send_results import send_results
 from xfile import xfile
@@ -18,8 +19,8 @@ else:
 
 def find_start_day(csv_file):
     with open(csv_file, 'r') as file:
-        csv_reader = csv.reader(file)
-        for row in csv_reader:
+        traffic_rows = list(csv.reader(file))
+        for row in traffic_rows:
             if 'week of' in row[1].lower():  # Assuming "week of" is always in column 2
                 date_string = row[2].strip()  # Assuming date is always in column 3
                 break
@@ -34,9 +35,9 @@ def find_start_day(csv_file):
     # Calculate the current date without the time component
     current_date = datetime.now().date()
 
-    # If "week of" is in the future, return "MONDAY"
+    # If "week of" is in the future, start on the first day of the traffic week
     if current_date < week_of_date:
-        return "MONDAY"
+        return traffic_week_order(traffic_rows)[0].upper()
 
     # Calculate the difference in days from "week of" to current date
     days_diff = (current_date - week_of_date).days
